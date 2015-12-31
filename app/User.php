@@ -39,4 +39,9 @@ class User extends Authenticatable
 		
 		return false;
 	}
+	
+	public function programs()
+	{
+		return $this->belongsToMany('App\Programs')->withTimestamps();
+	}
 }

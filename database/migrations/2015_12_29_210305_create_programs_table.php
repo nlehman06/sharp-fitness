@@ -19,6 +19,14 @@ class CreateProgramsTable extends Migration
 			$table->integer('active')->default(0);
             $table->timestamps();
         });
+		
+		Schema::create('programs_user', function (Blueprint $table) {
+			$table->integer('user_id')->unsigned()->index();
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+			$table->integer('programs_id')->unsigned()->index();
+			$table->foreign('programs_id')->references('id')->on('programs')->onDelete('cascade');
+			$table->timestamps();
+		});
     }
 
     /**
@@ -28,6 +36,7 @@ class CreateProgramsTable extends Migration
      */
     public function down()
     {
+		Schema::drop('programs_user');
         Schema::drop('programs');
     }
 }

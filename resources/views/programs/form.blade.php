@@ -15,5 +15,10 @@
 </div>
 
 <div class='form-group'>
+{!! Form::label('users', 'Users: ') !!}
+{!! Form::select('users[]', $users, null, ['class' => 'form-control', 'multiple']) !!}
+</div>
+
+<div class='form-group'>
 {!! Form::submit($submitButtonText, ['class' => 'btn btn-primary form-control']) !!}
 </div>

@@ -8,24 +8,33 @@ use App\Http\Requests\CreateProgramRequest;
 use App\Programs;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\User;
 
 class ProgramsController extends Controller
 {
     public function index()
 	{
-		$programs = Programs::orderby('name')->active()->get();
+		if(\Auth::user()->isAdmin()){
+			//Admin can see all workouts
+			$programs = Programs::orderby('name')->get();
+		} else {
+			$programs = Programs::orderby('name')->active()->get();
+		}
 		
 		return view('programs.index', compact('programs'));
 	}
 	
 	public function create()
 	{
-		return view('programs.create');
+		$users = User::lists('firstName', 'id');
+		return view('programs.create', compact('users'));
 	}
 	
 	public function store(CreateProgramRequest $request)
 	{
-		Programs::create($request->all());
+		$program = Programs::create($request->all());
+		
+		$program->users()->attach($request->input('users'));
 		
 		return redirect('programs')->with([
 			'flash_message' => 'Program Created', 
@@ -36,8 +45,9 @@ class ProgramsController extends Controller
 	
 	public function edit($id) {
 		$program = Programs::findorfail($id);
+		$users = User::lists('firstName', 'id');
 		
-		return view('programs.edit', compact('program'));
+		return view('programs.edit', compact('program', 'users'));
 	}
 	
 	public function update($id, CreateProgramRequest $request)
@@ -52,5 +62,12 @@ class ProgramsController extends Controller
 			'flash_alert_class' => 'alert-success'
 		]);
 		
+	}
+	
+	public function show($id)
+	{
+		$program = Programs::findorfail($id);
+		
+		return view('programs.show', compact('program'));
 	}
 }

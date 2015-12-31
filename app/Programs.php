@@ -20,4 +20,9 @@ class Programs extends Model
 	{
 		$query->where('active', '=', '0');
 	}
+	
+	public function users()
+	{
+		return $this->belongsToMany('App\User')->withTimestamps();
+	}
 }
