@@ -25,4 +25,9 @@ class Programs extends Model
 	{
 		return $this->belongsToMany('App\User')->withTimestamps();
 	}
+	
+	public function getUserListAttribute()
+	{
+		return $this->users->lists('id')->all();
+	}
 }

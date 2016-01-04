@@ -18,7 +18,7 @@ class ProgramsController extends Controller
 			//Admin can see all workouts
 			$programs = Programs::orderby('name')->get();
 		} else {
-			$programs = Programs::orderby('name')->active()->get();
+			$programs = \Auth::user()->programs()->orderby('name')->active()->get();
 		}
 		
 		return view('programs.index', compact('programs'));
@@ -32,9 +32,7 @@ class ProgramsController extends Controller
 	
 	public function store(CreateProgramRequest $request)
 	{
-		$program = Programs::create($request->all());
-		
-		$program->users()->attach($request->input('users'));
+		$this->createProgram($request);
 		
 		return redirect('programs')->with([
 			'flash_message' => 'Program Created', 
@@ -56,6 +54,8 @@ class ProgramsController extends Controller
 		
 		$program->update($request->all());
 		
+		$this->syncTags($program, $request->input('userlist'));
+		
 		return redirect('programs')->with([
 			'flash_message' => 'Program Updated', 
 			//'flash_message_important' => true, 
@@ -69,5 +69,31 @@ class ProgramsController extends Controller
 		$program = Programs::findorfail($id);
 		
 		return view('programs.show', compact('program'));
+	}
+	
+	private function syncTags(Programs $program, $users)
+	{
+		$program->users()->sync((array)$users);
+	}
+	
+	private function createProgram(CreateProgramRequest $request)
+	{
+		$program = Programs::create($request->all());
+		
+		$this->syncTags($program, $request->input('userlist'));
+		
+		return $program;
+	}
+	
+	public function destroy(Request $request, Programs $programs)
+	{
+		
+		$programs->delete();
+		
+		return redirect('programs')->with([
+			'flash_message' => 'Program Deleted', 
+			//'flash_message_important' => true, 
+			'flash_alert_class' => 'alert-success'
+		]);
 	}
 }

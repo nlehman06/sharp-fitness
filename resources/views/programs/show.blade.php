@@ -7,11 +7,13 @@
 	
 	<p>{{ $program->description }}<p>
 	
-	<ul>
-		@foreach($program->users as $user)
-			<li>{{ $user->firstName }} </li>
-		@endforeach
-	</ul>
+	@unless($program->users->isEmpty())
+		<ul>
+			@foreach($program->users as $user)
+				<li>{{ $user->firstName }} </li>
+			@endforeach
+		</ul>
+	@endunless
 
 </div>
 

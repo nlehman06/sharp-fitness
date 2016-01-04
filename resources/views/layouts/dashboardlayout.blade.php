@@ -7,8 +7,8 @@
 
 		<title>Sharp Fitness</title>
 		
-		<link rel='stylesheet' href='/css/app.css'>
-		<script src='/js/app.js'></script>
+		<link rel='stylesheet' href='/css/all.css'>
+		<script src='/js/all.js'></script>
 		
 	</head>
 
