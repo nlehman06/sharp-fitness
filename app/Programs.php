@@ -30,4 +30,9 @@ class Programs extends Model
 	{
 		return $this->users->lists('id')->all();
 	}
+	
+	public function workouts()
+	{
+		return $this->hasMany('App\Workouts')->withTimestamps();
+	}
 }
